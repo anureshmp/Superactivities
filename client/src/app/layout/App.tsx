@@ -7,12 +7,21 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 function App() {
   const title = 'Welcome to superactivites';
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [selectedActivity, setSelectedActivity] = useState<Activity|undefined>(undefined);
 
   useEffect(() => {
 
     axios.get<Activity[]>('https://localhost:5001/api/activities')
     .then(response => setActivities(response.data))
   }, []);
+
+  const handleSelectActivity = (id:string) => {
+    setSelectedActivity(activities.find(x => x.id === id));
+  }
+
+  const cancelHandleSelectActivity = () => {
+    setSelectedActivity(undefined);
+  }
 
   return (
     <>
@@ -21,7 +30,11 @@ function App() {
     <CssBaseline/>
      <Navbar/>
      <Container maxWidth='xl' sx={{marginTop:3}}>
-        <ActivityDashboard activities={activities}/>
+        <ActivityDashboard activities={activities}
+        selectActivity = {handleSelectActivity}
+        cancelSelectActivity = {cancelHandleSelectActivity}
+        selectedActivity = {selectedActivity}
+        />
      </Container>
     </Box>
      </>
